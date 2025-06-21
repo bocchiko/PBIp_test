@@ -1,0 +1,32 @@
+table Categorias
+	lineageTag: 8b940981-9b88-4901-a6ea-914aa779f41c
+
+	column CategoryKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 88d04299-a32b-4aad-a88e-fb0cdbb6f45e
+		summarizeBy: none
+		sourceColumn: CategoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column NombreCategoria
+		dataType: string
+		lineageTag: cbb45d52-070f-4c12-a741-dc4f091881a8
+		summarizeBy: none
+		sourceColumn: NombreCategoria
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Categorias = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("tdw-assesment.cwb0siyssle1.us-east-1.rds.amazonaws.com", "assesment", [Query="SELECT #(lf)    CategoryKey,#(lf)    CategoryName AS NombreCategoria#(lf)FROM Data.Category;#(lf)"])
+				in
+				    Origen
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

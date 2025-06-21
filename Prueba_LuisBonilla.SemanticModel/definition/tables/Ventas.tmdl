@@ -1,0 +1,117 @@
+table Ventas
+	lineageTag: 98de2de6-8d68-44e7-a686-d56396975d7d
+
+	column OrderKey
+		dataType: int64
+		formatString: 0
+		lineageTag: c8229e8f-b769-41a9-b43f-ed2606af3bc0
+		summarizeBy: count
+		sourceColumn: OrderKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumeroLinea
+		dataType: int64
+		formatString: 0
+		lineageTag: 578152a1-d6be-4754-ba81-4a6a71acb498
+		summarizeBy: sum
+		sourceColumn: NumeroLinea
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 01f6207c-1033-400a-b377-1dee4d1bc2be
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column StoreKey
+		dataType: int64
+		formatString: 0
+		lineageTag: cd039cd0-5a29-40dc-b961-57a43aece31e
+		summarizeBy: none
+		sourceColumn: StoreKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 888db323-bed2-48b8-b148-341cf030bb22
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e2b2c535-94c2-4d0f-80ec-5b3f1b3ebbdb
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonedaOriginal
+		dataType: string
+		lineageTag: e1ea4dfa-e816-49c5-acdb-6ca9ed67b9df
+		summarizeBy: none
+		sourceColumn: MonedaOriginal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cantidad
+		dataType: double
+		lineageTag: dade1a06-3d6a-4393-9c80-726d740fc390
+		summarizeBy: sum
+		sourceColumn: Cantidad
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PrecioUnitario_USD
+		dataType: double
+		lineageTag: 3bd10f21-e3ff-43a8-8731-00fb3f8dd666
+		summarizeBy: sum
+		sourceColumn: PrecioUnitario_USD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PrecioNeto_USD
+		dataType: double
+		lineageTag: 6060b2a1-c20d-42a6-8f21-e01c44254aac
+		summarizeBy: sum
+		sourceColumn: PrecioNeto_USD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CostoUnitario_USD
+		dataType: double
+		lineageTag: 42707dcd-f0c6-4a92-b579-bb44b5fe637d
+		summarizeBy: sum
+		sourceColumn: CostoUnitario_USD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Ventas = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("tdw-assesment.cwb0siyssle1.us-east-1.rds.amazonaws.com", "assesment", [Query="SELECT #(lf)    sd.OrderKey,#(lf)    sd.LineNumber AS NumeroLinea,#(lf)    sh.CustomerKey,#(lf)    sh.StoreKey,#(lf)    sd.ProductKey,#(lf)    sh.OrderDate AS Fecha,#(lf)    sh.CurrencyCode AS MonedaOriginal,#(lf)    sd.Quantity AS Cantidad,#(lf)    sd.UnitPrice * ce.Exchange AS PrecioUnitario_USD,#(lf)    sd.NetPrice * ce.Exchange AS PrecioNeto_USD,#(lf)    sd.UnitCost * ce.Exchange AS CostoUnitario_USD#(lf)FROM Data.Sales_Details AS sd#(lf)JOIN Data.Sales_Header AS sh ON sd.OrderKey = sh.OrderKey#(lf)LEFT JOIN Data.CurrencyExchange AS ce#(lf)    ON ce.FromCurrency = sh.CurrencyCode#(lf)    AND ce.ToCurrency = 'USD'#(lf)    AND ce.Date = sh.OrderDate#(lf)WHERE sh.CurrencyCode IN ('CAD', 'USD', 'GBP', 'AUD', 'EUR');"])
+				in
+				    Origen
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

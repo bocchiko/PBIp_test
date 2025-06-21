@@ -1,0 +1,64 @@
+table Tiendas
+	lineageTag: c0c17cb5-7dcd-47ab-8876-d6de0dab146d
+
+	column StoreKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 65f551de-c3b2-48f0-a68c-7dd50fbe6f47
+		summarizeBy: none
+		sourceColumn: StoreKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Descripcion
+		dataType: string
+		lineageTag: 487099b8-424a-4c48-ac68-743e22b4db0e
+		summarizeBy: none
+		sourceColumn: Descripcion
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: 6613e790-f732-4ea3-8543-a68d314ceadd
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodigoEstado
+		dataType: string
+		lineageTag: 0725a20e-f5ca-4eea-9223-fba2c055468c
+		summarizeBy: none
+		sourceColumn: CodigoEstado
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodigoPais
+		dataType: string
+		lineageTag: 22a9f87e-8793-4f42-b15f-e68ecb6d4930
+		summarizeBy: none
+		sourceColumn: CodigoPais
+
+		annotation SummarizationSetBy = Automatic
+
+	column NombrePais
+		dataType: string
+		lineageTag: 199a6f8b-df8a-49b4-9014-e4083371219a
+		summarizeBy: none
+		sourceColumn: NombrePais
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Tiendas = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("tdw-assesment.cwb0siyssle1.us-east-1.rds.amazonaws.com", "assesment", [Query="SELECT #(lf)    st.StoreKey,#(lf)#(tab)st.Description AS Descripcion,#(lf)#(tab)st.Status,#(lf)    s.StateCode AS CodigoEstado,#(lf)    co.CountryCode AS CodigoPais,#(lf)    co.CountryName AS NombrePais#(lf)FROM Data.Store AS st#(lf)JOIN Data.State AS s ON st.StateKey = s.StateKey#(lf)JOIN Data.Country AS co ON s.CountryCode = co.CountryCode;"])
+				in
+				    Origen
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

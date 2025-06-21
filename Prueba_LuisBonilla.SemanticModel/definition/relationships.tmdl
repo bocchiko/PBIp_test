@@ -1,0 +1,20 @@
+relationship 25326f33-923f-c70d-939c-72d4c0b08f34
+	fromColumn: Ventas.CustomerKey
+	toColumn: Clientes.CustomerKey
+
+relationship 84df7ed7-9574-1109-dd7d-836d2f463599
+	fromColumn: Ventas.StoreKey
+	toColumn: Tiendas.StoreKey
+
+relationship 89727733-aa13-1a93-801e-5e10a9ed70ba
+	fromColumn: Ventas.ProductKey
+	toColumn: Productos.ProductKey
+
+relationship e297afb1-452a-4392-c925-035abb78421f
+	fromColumn: Productos.CategoryKey
+	toColumn: Categorias.CategoryKey
+
+relationship 879725b3-9591-1f2e-5afc-4b1ed761fc3c
+	fromColumn: Productos.SubCategoryKey
+	toColumn: SubCategorias.SubCategoryKey
+

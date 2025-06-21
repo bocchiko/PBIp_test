@@ -1,0 +1,72 @@
+table Clientes
+	lineageTag: 4865d4ac-4fc6-4194-9dd7-c8aa7963b810
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: de05006c-29a8-4a56-bf29-7efe603792cc
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column NombreCompleto
+		dataType: string
+		lineageTag: 624a96ed-a29b-4f75-8d91-2392a00c7b6f
+		summarizeBy: none
+		sourceColumn: NombreCompleto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ocupacion
+		dataType: string
+		lineageTag: 2dbc9af5-7fab-481e-982b-47188e9fa83d
+		summarizeBy: none
+		sourceColumn: Ocupacion
+
+		annotation SummarizationSetBy = Automatic
+
+	column Compania
+		dataType: string
+		lineageTag: 7616b420-7b9b-4b84-81df-b159b5c77f74
+		summarizeBy: none
+		sourceColumn: Compania
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodigoEstado
+		dataType: string
+		lineageTag: 0ef33705-8493-4b49-9625-d24355d34e73
+		summarizeBy: none
+		sourceColumn: CodigoEstado
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodigoPais
+		dataType: string
+		lineageTag: 08703103-b6b5-4337-adb2-477d957ef3e8
+		summarizeBy: none
+		sourceColumn: CodigoPais
+
+		annotation SummarizationSetBy = Automatic
+
+	column NombrePais
+		dataType: string
+		lineageTag: c58cd770-1b86-4001-aa3b-d71f5b4a40ae
+		summarizeBy: none
+		sourceColumn: NombrePais
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Clientes = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("tdw-assesment.cwb0siyssle1.us-east-1.rds.amazonaws.com", "assesment", [Query="SELECT #(lf)    c.CustomerKey,#(lf)    c.GivenName + ' ' + c.Surname AS NombreCompleto,#(lf)#(tab)c.Occupation AS Ocupacion,#(lf)#(tab)c.Company AS Compania,#(lf)    s.StateCode AS CodigoEstado,#(lf)    co.CountryCode AS CodigoPais,#(lf)    co.CountryName AS NombrePais#(lf)FROM Data.Customer AS c#(lf)JOIN Data.State AS s ON c.StateKey = s.StateKey#(lf)JOIN Data.Country AS co ON s.CountryCode = co.CountryCode;"])
+				in
+				    Origen
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

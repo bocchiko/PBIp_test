@@ -1,11 +1,25 @@
 model Model
 	culture: es-SV
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-SV
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBIDesktopVersion = 2.144.878.0 (25.06)+9cca29236de5114792f4d7188221f91ad4a5cc50
 
 annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["Productos","Categorias","SubCategorias","Ventas","Clientes","Tiendas"]
+
+ref table Productos
+ref table Categorias
+ref table SubCategorias
+ref table Ventas
+ref table Clientes
+ref table Tiendas
 
 ref cultureInfo es-SV
 

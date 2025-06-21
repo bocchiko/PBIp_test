@@ -1,0 +1,96 @@
+table Productos
+	lineageTag: 1699e92c-d0c4-4dd2-a7c8-e8d151917149
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 17386347-1cdc-4e42-af8f-42c91f54f3bc
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CategoryKey
+		dataType: int64
+		formatString: 0
+		lineageTag: f2a19775-070b-4708-8b01-bb2bd5ad15a3
+		summarizeBy: none
+		sourceColumn: CategoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubCategoryKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 940cb620-318c-45a0-9e75-44105053215b
+		summarizeBy: none
+		sourceColumn: SubCategoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fabricante
+		dataType: string
+		lineageTag: 90dbdee1-2152-4353-a296-4473044fcf1a
+		summarizeBy: none
+		sourceColumn: Fabricante
+
+		annotation SummarizationSetBy = Automatic
+
+	column Marca
+		dataType: string
+		lineageTag: 32a8fe84-890e-4a97-9a93-62f7e3bfad34
+		summarizeBy: none
+		sourceColumn: Marca
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnidadPesoOriginal
+		dataType: string
+		lineageTag: 1c9217f6-f457-4676-aeb9-713e578e8c26
+		summarizeBy: none
+		sourceColumn: UnidadPesoOriginal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Peso_KG
+		dataType: double
+		lineageTag: d0f670a1-22f7-431d-89b2-004a695c35cf
+		summarizeBy: sum
+		sourceColumn: Peso_KG
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Costo
+		dataType: double
+		lineageTag: 134af782-3885-4134-96c5-f67452abeff7
+		summarizeBy: sum
+		sourceColumn: Costo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Precio
+		dataType: double
+		lineageTag: 32a1b6b1-4c06-49ba-baac-529dd03b372a
+		summarizeBy: sum
+		sourceColumn: Precio
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Productos = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("tdw-assesment.cwb0siyssle1.us-east-1.rds.amazonaws.com", "assesment", [Query="SELECT #(lf)    p.ProductKey,#(lf)    p.CategoryKey,#(lf)    p.SubCategoryKey,#(lf)    p.Manufacturer AS Fabricante,#(lf)    p.Brand AS Marca,#(lf)    p.WeightUnit AS UnidadPesoOriginal,#(lf)    -- Transformar el peso a kilogramos según la unidad#(lf)    CASE #(lf)        WHEN LOWER(p.WeightUnit) = 'ounces' THEN p.Weight * 0.0283495#(lf)        WHEN LOWER(p.WeightUnit) = 'pounds' THEN p.Weight * 0.453592#(lf)        WHEN LOWER(p.WeightUnit) = 'grams' THEN p.Weight / 1000.0#(lf)        WHEN p.WeightUnit IS NULL THEN p.Weight  -- Asumimos que ya está en kilogramos#(lf)        ELSE p.Weight  #(lf)    END AS Peso_KG,#(lf)    p.Cost AS Costo,#(lf)    p.Price AS Precio#(lf)FROM Data.Product AS p#(lf)LEFT JOIN Data.Category AS c ON p.CategoryKey = c.CategoryKey#(lf)LEFT JOIN Data.SubCategory AS sc ON p.SubCategoryKey = sc.SubCategoryKey;"])
+				in
+				    Origen
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+
