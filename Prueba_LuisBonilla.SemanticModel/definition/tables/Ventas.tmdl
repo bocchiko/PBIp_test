@@ -1,6 +1,73 @@
 table Ventas
 	lineageTag: 98de2de6-8d68-44e7-a686-d56396975d7d
 
+	measure 'Venta USD' = SUM('Ventas'[PrecioNeto_USD])
+		lineageTag: 85aa3c60-2157-48b5-a303-3be2ff654b15
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Costo USD' =
+			SUMX(
+			    'Ventas',
+			    'Ventas'[Cantidad] * 'Ventas'[CostoUnitario_USD]
+			)
+		lineageTag: 09c869d8-6161-40b5-9442-200ddc7ba3c5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Margen USD' = [Venta USD] - [Costo USD]
+		lineageTag: 86972f40-c552-41e3-a646-8d66ed918d62
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cantidad_Metrica = SUM('Ventas'[Cantidad])
+		lineageTag: ce0c2eaa-6f7e-4157-8175-bf2f1d8adca4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Kilogramos =
+			
+			SUMX(
+			    'Ventas',
+			    'Ventas'[Cantidad] * RELATED('Productos'[Peso_KG])
+			)
+		lineageTag: 9e1090e9-3c24-4141-8d3c-f3f84c865fef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ticket Promedio' =
+			
+			DIVIDE([Venta USD], DISTINCTCOUNT('Ventas'[OrderKey]))
+		lineageTag: cdef84a4-fad9-448e-8eff-44e6a05f7a09
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Precio Promedio USD' = DIVIDE([Venta USD], [Cantidad_Metrica])
+		lineageTag: 44151174-0258-45ff-b08a-d28c8d2d83f6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Precio Promedio por Kilogramo' =
+			
+			DIVIDE([Venta USD], [Kilogramos])
+		lineageTag: 4e14e518-7647-401d-9342-0a5e2b4cb94d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Venta Promedio por Cliente' =
+			
+			DIVIDE([Venta USD], DISTINCTCOUNT('Ventas'[CustomerKey]))
+		lineageTag: e26a857c-f027-4f86-b84e-4856a69c8ec2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Unidades Promedio por Ticket' =
+			
+			DIVIDE([Cantidad_Metrica], DISTINCTCOUNT('Ventas'[OrderKey]))
+		lineageTag: 997c5de4-7487-4c06-b019-217aff77f110
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	column OrderKey
 		dataType: int64
 		formatString: 0
