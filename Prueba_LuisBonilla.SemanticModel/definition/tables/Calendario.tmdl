@@ -1,0 +1,67 @@
+table Calendario
+	lineageTag: 40d8d0a4-0491-42b3-828e-8992c250065b
+
+	column Fecha
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 98a690bc-88fb-468b-b51c-a98a47915189
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+	column Año
+		dataType: int64
+		formatString: 0
+		lineageTag: 6f600e99-d934-4f5d-b5f8-e81f37f57278
+		summarizeBy: none
+		sourceColumn: Año
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e289559-1da0-4f24-9138-b353a42fd8cb
+		summarizeBy: none
+		sourceColumn: Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column NombreMes
+		dataType: string
+		lineageTag: 6be51a54-5e59-41dc-b8a1-90cb0d06de65
+		summarizeBy: none
+		sourceColumn: NombreMes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Día
+		dataType: int64
+		formatString: 0
+		lineageTag: 8cdf2141-3fe8-472f-8e1b-16f9dd10569b
+		summarizeBy: none
+		sourceColumn: Día
+
+		annotation SummarizationSetBy = Automatic
+
+	column NombreDiaSemana
+		dataType: string
+		lineageTag: 727ffab6-c470-44c6-905f-7c288d1d7db3
+		summarizeBy: none
+		sourceColumn: NombreDiaSemana
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendario = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("tdw-assesment.cwb0siyssle1.us-east-1.rds.amazonaws.com", "assesment", [Query="WITH CTE_Fecha AS (#(lf)    SELECT CAST('2020-01-01' AS DATE) AS Fecha#(lf)    UNION ALL#(lf)    SELECT DATEADD(DAY, 1, Fecha)#(lf)    FROM CTE_Fecha#(lf)    WHERE Fecha < '2025-12-31'#(lf))#(lf)SELECT #(lf)    Fecha,#(lf)    YEAR(Fecha) AS Año,#(lf)    MONTH(Fecha) AS Mes,#(lf)    DATENAME(MONTH, Fecha) AS NombreMes,#(lf)    DAY(Fecha) AS Día,#(lf)    DATENAME(WEEKDAY, Fecha) AS NombreDiaSemana#(lf)FROM CTE_Fecha#(lf)OPTION (MAXRECURSION 32767);"])
+				in
+				    Origen
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

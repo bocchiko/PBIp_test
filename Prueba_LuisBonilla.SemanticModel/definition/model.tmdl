@@ -12,7 +12,7 @@ annotation PBIDesktopVersion = 2.144.878.0 (25.06)+9cca29236de5114792f4d7188221f
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["Productos","Categorias","SubCategorias","Ventas","Clientes","Tiendas"]
+annotation PBI_QueryOrder = ["Productos","Categorias","SubCategorias","Ventas","Clientes","Tiendas","Calendario"]
 
 ref table Productos
 ref table Categorias
@@ -20,6 +20,7 @@ ref table SubCategorias
 ref table Ventas
 ref table Clientes
 ref table Tiendas
+ref table Calendario
 
 ref cultureInfo es-SV
 

@@ -18,3 +18,7 @@ relationship 879725b3-9591-1f2e-5afc-4b1ed761fc3c
 	fromColumn: Productos.SubCategoryKey
 	toColumn: SubCategorias.SubCategoryKey
 
+relationship 2bf825f7-984f-b441-445a-49bbe597943a
+	fromColumn: Ventas.Fecha
+	toColumn: Calendario.Fecha
+

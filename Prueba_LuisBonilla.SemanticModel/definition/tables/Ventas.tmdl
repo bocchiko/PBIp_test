@@ -68,6 +68,108 @@ table Ventas
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	measure 'Venta USD AA' = ```
+			
+			CALCULATE(
+			    [Venta USD],
+			    SAMEPERIODLASTYEAR('Calendario'[Fecha])
+			)
+			
+			```
+		lineageTag: 93b975d8-4e7d-4205-94ec-5e9f9a987504
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Var Venta USD' = [Venta USD] - [Venta USD AA]
+		lineageTag: ba05fa6d-761a-451e-a997-e9374d5bceb0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Delta Venta USD' = ```
+			
+			DIVIDE([Var Venta USD], [Venta USD AA])
+			
+			```
+		lineageTag: 8e5a4884-8fb3-4cc4-bfe2-282981d13973
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Venta USD MTD' = ```
+			
+			TOTALMTD([Venta USD], 'Calendario'[Fecha])
+			
+			```
+		lineageTag: 32281153-4882-4c83-8a73-5432a68bfa56
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Venta USD MTD AA' = ```
+			
+			CALCULATE(
+			    [Venta USD MTD],
+			    SAMEPERIODLASTYEAR('Calendario'[Fecha])
+			)
+			
+			```
+		lineageTag: 644fbaf2-4ac5-4aae-aa39-036adf6512b8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Var Venta USD MTD' = ```
+			[Venta USD MTD] - [Venta USD MTD AA]
+			
+			```
+		lineageTag: 297bfa87-eac0-44bc-8af4-c12d0053d9fd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Delta Venta USD MTD' = ```
+			
+			DIVIDE([Var Venta USD MTD], [Venta USD MTD AA])
+			
+			```
+		lineageTag: 4540b274-5c47-4678-9af1-780dd922128b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Venta USD YTD' = ```
+			
+			TOTALYTD([Venta USD], 'Calendario'[Fecha])
+			
+			```
+		lineageTag: 5fdaa941-7e7b-423e-b7ec-cea9ad1c2e39
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Venta USD YTD AA' = ```
+			
+			CALCULATE(
+			    [Venta USD YTD],
+			    SAMEPERIODLASTYEAR('Calendario'[Fecha])
+			)
+			
+			```
+		lineageTag: 19609e06-24e8-4aa5-9851-b41bb71a5098
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Var Venta USD YTD' = ```
+			[Venta USD YTD] - [Venta USD YTD AA]
+			
+			```
+		lineageTag: 7992e70c-0ef7-439c-8226-8e417ef5fc84
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Delta Venta USD YTD' = ```
+			
+			DIVIDE([Var Venta USD YTD], [Venta USD YTD AA])
+			
+			```
+		lineageTag: 45a22586-a2f5-4dd4-bcaa-4a994f44d8b5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	column OrderKey
 		dataType: int64
 		formatString: 0
