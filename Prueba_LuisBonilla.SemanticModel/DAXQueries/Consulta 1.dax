@@ -1,3 +1,4 @@
 // Le damos la bienvenida a la vista de consultas DAX. Obtenga más información sobre las consultas DAX en https://aka.ms/dax-queries.
 // Haga clic con el botón derecho en tablas, columnas o medidas en el panel de datos para acceder a consultas rápidas o pida ayuda a Copilot para escribir DAX.
 Venta_USD = SUM(Ventas[PrecioNeto_USD])
+	

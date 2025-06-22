@@ -1,16 +1,40 @@
 table Ventas
 	lineageTag: 98de2de6-8d68-44e7-a686-d56396975d7d
 
-	measure 'Venta USD' = SUM('Ventas'[PrecioNeto_USD])
+	measure 'Venta USD' = ```
+			
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR AnioActual = YEAR(Limite)
+			RETURN
+			    CALCULATE(
+			        SUMX(
+			            'Ventas',
+			            'Ventas'[Cantidad] * 'Ventas'[PrecioNeto_USD]
+			        ),
+			        'Ventas'[Fecha] <= Limite,
+			        YEAR('Ventas'[Fecha]) = AnioActual
+			    )
+			
+			```
 		lineageTag: 85aa3c60-2157-48b5-a303-3be2ff654b15
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Costo USD' =
-			SUMX(
-			    'Ventas',
-			    'Ventas'[Cantidad] * 'Ventas'[CostoUnitario_USD]
-			)
+	measure 'Costo USD' = ```
+			
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR AnioActual = YEAR(Limite)
+			RETURN
+			    CALCULATE(
+			        SUMX(
+			            'Ventas',
+			            'Ventas'[Cantidad] * RELATED('Productos'[Costo])
+			        ),
+			        'Ventas'[Fecha] <= Limite,
+			        YEAR('Ventas'[Fecha]) = AnioActual
+			    )
+			
+			```
 		lineageTag: 09c869d8-6161-40b5-9442-200ddc7ba3c5
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
@@ -20,17 +44,35 @@ table Ventas
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure Cantidad_Metrica = SUM('Ventas'[Cantidad])
+	measure Cantidad_Metrica = ```
+			
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR AnioActual = YEAR(Limite)
+			RETURN
+			    CALCULATE(
+			        SUM('Ventas'[Cantidad]),
+			        'Ventas'[Fecha] <= Limite,
+			        YEAR('Ventas'[Fecha]) = AnioActual
+			    )
+			
+			```
 		lineageTag: ce0c2eaa-6f7e-4157-8175-bf2f1d8adca4
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure Kilogramos =
 			
-			SUMX(
-			    'Ventas',
-			    'Ventas'[Cantidad] * RELATED('Productos'[Peso_KG])
-			)
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR AnioActual = YEAR(Limite)
+			RETURN
+			    CALCULATE(
+			        SUMX(
+			            'Ventas',
+			            'Ventas'[Cantidad] * RELATED('Productos'[Peso_KG])
+			        ),
+			        'Ventas'[Fecha] <= Limite,
+			        YEAR('Ventas'[Fecha]) = AnioActual
+			    )
 		lineageTag: 9e1090e9-3c24-4141-8d3c-f3f84c865fef
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
@@ -70,17 +112,28 @@ table Ventas
 
 	measure 'Venta USD AA' = ```
 			
-			CALCULATE(
-			    [Venta USD],
-			    SAMEPERIODLASTYEAR('Calendario'[Fecha])
-			)
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR LimiteAA = EDATE(Limite, -12)
+			VAR AnioAnterior = YEAR(Limite) - 1
+			RETURN
+			    CALCULATE(
+			        SUMX(
+			            'Ventas',
+			            'Ventas'[Cantidad] * 'Ventas'[PrecioNeto_USD]
+			        ),
+			        'Ventas'[Fecha] <= LimiteAA,
+			        YEAR('Ventas'[Fecha]) = AnioAnterior
+			    )
 			
 			```
 		lineageTag: 93b975d8-4e7d-4205-94ec-5e9f9a987504
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Var Venta USD' = [Venta USD] - [Venta USD AA]
+	measure 'Var Venta USD' = ```
+			[Venta USD] - [Venta USD AA]
+			
+			```
 		lineageTag: ba05fa6d-761a-451e-a997-e9374d5bceb0
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
@@ -96,7 +149,17 @@ table Ventas
 
 	measure 'Venta USD MTD' = ```
 			
-			TOTALMTD([Venta USD], 'Calendario'[Fecha])
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR AnioActual = YEAR(Limite)
+			RETURN
+			    CALCULATE(
+			        TOTALMTD(
+			            SUMX('Ventas', 'Ventas'[Cantidad] * 'Ventas'[PrecioNeto_USD]),
+			            'Calendario'[Fecha]
+			        ),
+			        'Calendario'[Fecha] <= Limite,
+			        YEAR('Calendario'[Fecha]) = AnioActual
+			    )
 			
 			```
 		lineageTag: 32281153-4882-4c83-8a73-5432a68bfa56
@@ -105,10 +168,18 @@ table Ventas
 
 	measure 'Venta USD MTD AA' = ```
 			
-			CALCULATE(
-			    [Venta USD MTD],
-			    SAMEPERIODLASTYEAR('Calendario'[Fecha])
-			)
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR LimiteAA = EDATE(Limite, -12)
+			VAR AnioAnterior = YEAR(Limite) - 1
+			RETURN
+			    CALCULATE(
+			        TOTALMTD(
+			            SUMX('Ventas', 'Ventas'[Cantidad] * 'Ventas'[PrecioNeto_USD]),
+			            'Calendario'[Fecha]
+			        ),
+			        'Calendario'[Fecha] <= LimiteAA,
+			        YEAR('Calendario'[Fecha]) = AnioAnterior
+			    )
 			
 			```
 		lineageTag: 644fbaf2-4ac5-4aae-aa39-036adf6512b8
@@ -134,7 +205,17 @@ table Ventas
 
 	measure 'Venta USD YTD' = ```
 			
-			TOTALYTD([Venta USD], 'Calendario'[Fecha])
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR AnioActual = YEAR(Limite)
+			RETURN
+			    CALCULATE(
+			        TOTALYTD(
+			            SUMX('Ventas', 'Ventas'[Cantidad] * 'Ventas'[PrecioNeto_USD]),
+			            'Calendario'[Fecha]
+			        ),
+			        'Calendario'[Fecha] <= Limite,
+			        YEAR('Calendario'[Fecha]) = AnioActual
+			    )
 			
 			```
 		lineageTag: 5fdaa941-7e7b-423e-b7ec-cea9ad1c2e39
@@ -143,10 +224,18 @@ table Ventas
 
 	measure 'Venta USD YTD AA' = ```
 			
-			CALCULATE(
-			    [Venta USD YTD],
-			    SAMEPERIODLASTYEAR('Calendario'[Fecha])
-			)
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR LimiteAA = EDATE(Limite, -12)
+			VAR AnioAnterior = YEAR(Limite) - 1
+			RETURN
+			    CALCULATE(
+			        TOTALYTD(
+			            SUMX('Ventas', 'Ventas'[Cantidad] * 'Ventas'[PrecioNeto_USD]),
+			            'Calendario'[Fecha]
+			        ),
+			        'Calendario'[Fecha] <= LimiteAA,
+			        YEAR('Calendario'[Fecha]) = AnioAnterior
+			    )
 			
 			```
 		lineageTag: 19609e06-24e8-4aa5-9851-b41bb71a5098
@@ -167,6 +256,32 @@ table Ventas
 			
 			```
 		lineageTag: 45a22586-a2f5-4dd4-bcaa-4a994f44d8b5
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Descuento USD' = ```
+			
+			VAR Limite = CALCULATE(MAX('Ventas'[Fecha]))
+			VAR AnioActual = YEAR(Limite)
+			RETURN
+			    CALCULATE(
+			        SUMX(
+			            'Ventas',
+			            'Ventas'[Cantidad] * ('Ventas'[PrecioUnitario_USD] - 'Ventas'[PrecioNeto_USD])
+			        ),
+			        'Ventas'[Fecha] <= Limite,
+			        YEAR('Ventas'[Fecha]) = AnioActual
+			    )
+			
+			```
+		lineageTag: d248c0ea-f17d-4350-bd8d-48505c2c9630
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure DescuentoSobreVenta = DIVIDE([Descuento USD], [Venta USD])
+		lineageTag: ef520c76-f023-4407-8942-8ced77ca5ec8
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 

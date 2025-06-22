@@ -5,6 +5,11 @@
       "name": "CY24SU10",
       "reportVersionAtImport": "5.65",
       "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "AccessibleCityPark",
+      "reportVersionAtImport": "5.65",
+      "type": "SharedResources"
     }
   },
   "objects": {
@@ -31,6 +36,11 @@
           "name": "CY24SU10",
           "path": "BaseThemes/CY24SU10.json",
           "type": "BaseTheme"
+        },
+        {
+          "name": "AccessibleCityPark",
+          "path": "BuiltInThemes/AccessibleCityPark.json",
+          "type": "CustomTheme"
         }
       ]
     }
@@ -39,6 +49,7 @@
     "useStylableVisualContainerHeader": true,
     "defaultDrillFilterOtherVisuals": true,
     "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
     "useDefaultAggregateDisplayName": true
   },
   "slowDataSourceSettings": {

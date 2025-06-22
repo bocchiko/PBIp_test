@@ -2,6 +2,5 @@
   "version": "1.0",
   "parallelQueryLoading": true,
   "typeDetectionEnabled": true,
-  "runBackgroundAnalysis": true,
   "shouldNotifyUserOfNameConflictResolution": true
 }
